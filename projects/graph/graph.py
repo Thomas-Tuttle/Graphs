@@ -44,6 +44,7 @@ class Graph:
         # Print each vertex in depth-first order
         # beginning from starting_vertex.
         # Create an empty stack and push the starting vertex ID
+
         s = Stack()
         s.push(starting_vertex)
         # Create a Set to store visited vertices
@@ -61,23 +62,51 @@ class Graph:
                 for neighbor in self.vertices[v]:
                     s.push(neighbor)
 
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, starting_vertex, visited=[]):
         # Print each vertex in depth-first order
         # beginning from starting_vertex.
         # This should be done using recursion.
-        pass  # TODO
+
+        if starting_vertex not in visited:
+            print(starting_vertex)
+            visited.append(starting_vertex)
+            for v in self.vertices[starting_vertex]:
+                self.dft_recursive(v, visited)
 
     def bfs(self, starting_vertex, destination_vertex):
         # Return a list containing the shortest path from
         # starting_vertex to destination_vertex in
         # breath-first order.
-        pass  # TODO
+        queue = Queue()
+        queue.enqueue((starting_vertex, [starting_vertex]))
 
-    def dfs(self, starting_vertex, destination_vertex):
+        while queue.size() > 0:
+            u = queue.dequeue()
+
+            for v in self.vertices[u[0]]:
+                path = u[1]+[v]
+                if v == destination_vertex:
+                    return path
+                else:
+                    queue.enqueue((v, path))
+
+    def dfs(self, starting_vertex, destination_vertex, visited=[]):
         # Return a list containing a path from
         # starting_vertex to destination_vertex in
         # depth-first order.
-        pass  # TODO
+        stack = Stack()
+        stack.push((starting_vertex, [starting_vertex]))
+
+        while stack.size() > 0:
+            u = stack.pop()
+
+            for v in self.vertices[u[0]]:
+                path = u[1]+[v]
+                if v == destination_vertex:
+                    return path
+                else:
+                    stack.push((v, path))
+
 
 
 
