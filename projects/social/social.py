@@ -1,8 +1,10 @@
-
+import random
 
 class User:
     def __init__(self, name):
         self.name = name
+    def __repr__(self):
+        return self.name
 
 class SocialGraph:
     def __init__(self):
@@ -21,6 +23,7 @@ class SocialGraph:
         else:
             self.friendships[userID].add(friendID)
             self.friendships[friendID].add(userID)
+            return True
 
     def addUser(self, name):
         """
@@ -47,26 +50,57 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        # call addUser() until our number of users is numUsers
+        for i in range(numUsers):
+            self.addUser(f"User {i+1}")
+    
+        target_friendships = (numUsers * avgFriendships) // 2
+        total_friendships = 0
+        collisions = 0
+        while total_friendships < target_friendships:
+            userID = random.randint(1, self.lastID)
+            friendID = random.randint(1, self.lastID)
+            if self.addFriendship(userID, friendID):
+                total_friendships += 2
+            else:
+                collisions += 1
 
-        # Create friendships
+
+
+
 
     def getAllSocialPaths(self, userID):
         """
         Takes a user's userID as an argument
-
+​
         Returns a dictionary containing every user in that user's
         extended network with the shortest friendship path between them.
-
+​
         The key is the friend's ID and the value is the path.
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        qq = []
+        qq.append([userID])
+        while len(qq) > 0:
+            path = qq.pop(0)
+            new_user_id = path[-1]
+            if new_user_id not in visited:
+                visited[new_user_id] = path
+                for friendID in self.friendships[new_user_id]:
+                    if friendID not in visited:
+                        new_path = list(path)
+                        new_path.append(friendID)
+                        qq.append(new_path)        
         return visited
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populateGraph(10, 2)
+    sg.populateGraph(1000, 5)
+    print("USERS:")
+    print(sg.users)
+    print("FRIENDSHIPS:")
     print(sg.friendships)
     connections = sg.getAllSocialPaths(1)
     print(connections)
